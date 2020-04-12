@@ -12,3 +12,7 @@ Version 1.1 :
 
 Version 1.0 :
 1. It's NOT Complete Parser Yet. Only mapping and exporting the 'History' DB are possible...
+
+# Required
+1. Python 3.x
+2. 'pywin32' Library
