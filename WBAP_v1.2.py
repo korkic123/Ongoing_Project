@@ -1,14 +1,14 @@
-# Whale Browser Artifact Parser / Ver 1.2
+# Whale Browser Artifact Parser / Ver 0.3
 # Created By Korkic
 
-# Version 1.2 :
+# Version 0.3 :
 # 1. Scan all drives for artifacts
 
-# Version 1.1 :
+# Version 0.2 :
 # 1. Convert Chrome Time to KST
 # 2. Add Columns of Browser, Action and Search Keyword
 
-# Version 1.0 :
+# Version 0.1 :
 # 1. It's NOT Complete Parser Yet. Only mapping and exporting the 'History' DB are possible...
 
 
@@ -19,7 +19,7 @@ import sqlite3
 import datetime
 
 def search_users(dir) :
-# This function is to find the Whale Browser folder in the path
+# This function is to search the Whale Browser folder in the path
 
     gwf_list = []
     files = os.listdir(dir)
@@ -44,16 +44,18 @@ def convert_ct_2_kst(timestamp):
 
 def analyze_db(lt) :
 # This function is to make CSV file
-# Export path : %USERPROFILE%\Desktop\WBAP_Result.csv
+# Export path : %USERPROFILE%\Desktop\<username>_WBAP_Result.csv
 
-    print("History 파일을 분석합니다.")
+    user = lt.replace(lt[:9],"")
+
+    print(user + "의 History 파일을 분석합니다.")
 
     temp = "연 번,마지막 방문시간,브라우저,행 위,검색어,URL,제 목,방문 횟수\n"
     count = 0
 
     for c in range(0, len(lt)) :
-        if os.path.exists(lt[c] + "\\AppData\\Local\\Naver\\Naver Whale\\User Data\\Default\\History") :
-            db = lt[c] + "\\AppData\\Local\\Naver\\Naver Whale\\User Data\\Default\\History"
+        if os.path.exists(lt + "\\AppData\\Local\\Naver\\Naver Whale\\User Data\\Default\\History") :
+            db = lt + "\\AppData\\Local\\Naver\\Naver Whale\\User Data\\Default\\History"
 
     conn = sqlite3.connect(db)
     cur = conn.cursor()
@@ -83,7 +85,7 @@ def analyze_db(lt) :
     cur.close()
     cur2.close()
 
-    f = open(os.environ["USERPROFILE"] + "\\Desktop\\WBAP_Result.csv", "w")
+    f = open(os.environ["USERPROFILE"] + "\\Desktop\\" + user + "_WBAP_Result.csv", "w")
     f.write(temp)
     f.close
 
@@ -95,7 +97,8 @@ def analyze_db(lt) :
 
 os.system("cls")
 
-print("Naver Whale Browser Artifact Parser / Ver 1.2")
+print("Naver Whale Browser Artifact Parser")
+print("Version 0.3")
 print("Created By Korkic")
 print()
 print()
@@ -115,10 +118,10 @@ if len(wf_list) != 0 :
 
         print()
         print("진행사항 :")
-        analyze_db(wf_list)
+        analyze_db(wf_list[a])
 
-        print()
-        print("분석이 완료되었습니다.")
+    print()
+    print("분석이 완료되었습니다.")
 
 else :
     print("Naver Whale Browser Artifact가 확인되지 않습니다.")
