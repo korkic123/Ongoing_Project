@@ -1,16 +1,15 @@
 # Whale Browser Artifact Parser / Ver 1.2
-# Created By Korkic
+# Code By Korkic
 
 # Version 1.2 :
-# 1. Find Artifacts from All Drive
+# 1. Scan all drives for artifacts
 
 # Version 1.1 :
-# 1. Convert Chrome time to KST
-# 2. Add Kind of Browser, Action and Search Keyword column
+# 1. Convert Chrome Time to KST
+# 2. Add Columns of Browser, Action and Search Keyword
 
 # Version 1.0 :
-# 1. No parse, Only map and export...
-# 2. Export only 'History' Database
+# 1. It's NOT Complete Parser Yet. Only mapping and exporting the 'History' DB are possible...
 
 
 
@@ -97,7 +96,7 @@ def analyze_db(lt) :
 os.system("cls")
 
 print("Naver Whale Browser Artifact Parser / Ver 1.2")
-print("Created By Korkic")
+print("Code By Korkic")
 print()
 print()
 
