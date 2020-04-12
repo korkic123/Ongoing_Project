@@ -15,4 +15,4 @@ Version 1.0 :
 
 # Required
 1. Python 3.x
-2. 'pywin32' Library
+2. 'win32api' Library (pip install pywin32)
