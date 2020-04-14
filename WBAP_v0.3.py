@@ -20,10 +20,12 @@ import datetime
 
 def search_users(dir) :
 # This function is to search the Whale Browser folder in the path
-
+# 
     gwf_list = []
     files = os.listdir(dir)
 
+    # Whether there is 'Whale Browser' folder in 'dir' path's folders or not.
+    # if there is it, return this User's path.
     for file in files:
         if os.path.isdir(os.path.join(dir, file)) :
             if os.path.exists(os.path.join(dir, file, "AppData\\Local\\Naver\\Naver Whale\\User Data\\Default")) :
@@ -39,6 +41,7 @@ def convert_ct_2_kst(timestamp):
     passing_time = datetime.timedelta(microseconds=int(timestamp))
     kst = datetime.timedelta(hours=9)
 
+    # return to convert to KST
     return epoch_time + passing_time + kst
 
 
@@ -50,40 +53,47 @@ def analyze_db(lt) :
 
     print(user + "의 History 파일을 분석합니다.")
 
+    # Add column's names.
     temp = "연 번,마지막 방문시간,브라우저,행 위,검색어,URL,제 목,방문 횟수\n"
     count = 0
 
-    for c in range(0, len(lt)) :
-        if os.path.exists(lt + "\\AppData\\Local\\Naver\\Naver Whale\\User Data\\Default\\History") :
-            db = lt + "\\AppData\\Local\\Naver\\Naver Whale\\User Data\\Default\\History"
+    # Whether there is History DB.
+    if os.path.exists(lt + "\\AppData\\Local\\Naver\\Naver Whale\\User Data\\Default\\History") :
+        db = lt + "\\AppData\\Local\\Naver\\Naver Whale\\User Data\\Default\\History"
 
-            conn = sqlite3.connect(db)
-            cur = conn.cursor()
-            cur2 = conn.cursor()
+        # connect to DB
+        conn = sqlite3.connect(db)
+        cur = conn.cursor()
+        cur2 = conn.cursor()
 
-            for row in cur.execute("select id, last_visit_time, url, title, visit_count from urls order by last_visit_time desc") :
+        # DB data allocates to each column.
+        # execute 'urls' Table.
+        for row in cur.execute("select id, last_visit_time, url, title, visit_count from urls order by last_visit_time desc") :
+        
             # count = 연번
+            count += 1
+            temp += str(count) + ","
+            data_flag = 0
 
-                count += 1
-                temp += str(count) + ","
-                data_flag = 0
+            for m in range(1, 5) :
+                if m == 1 :
+                    temp += str(convert_ct_2_kst(row[m])) + ","
+                    temp += "Naver Whale Browser,"
 
-                for m in range(1, 5) :
-                    if m == 1 :
-                        temp += str(convert_ct_2_kst(row[m])) + ","
-                        temp += "Naver Whale Browser,"
-                        for row2 in cur2.execute("select url_id, term from keyword_search_terms") :
-                            if row[0] == row2[0] :
-                                temp += "검색," + row2[1] + ","
-                                data_flag = 1
-                        if data_flag == 0 :
-                            temp += ",,"
-                    else :
-                        temp += str(row[m]) + ","
-                temp += "\n"
+                    # execute 'keyword_search_terms' Table.
+                    # this table include searching data.
+                    for row2 in cur2.execute("select url_id, term from keyword_search_terms") :
+                        if row[0] == row2[0] :
+                            temp += "검색," + row2[1] + ","
+                            data_flag = 1
+                    if data_flag == 0 :
+                        temp += ",,"
+                else :
+                    temp += str(row[m]) + ","
+            temp += "\n"
 
-            cur.close()
-            cur2.close()
+        cur.close()
+        cur2.close()
 
     f = open(os.environ["USERPROFILE"] + "\\Desktop\\" + user + "_WBAP_Result.csv", "w")
     f.write(temp)
@@ -110,8 +120,9 @@ if len(wf_list) != 0 :
     for a in range(0, len(wf_list)) :
         print(wf_list[a])
 
-        print()
-        print("진행사항 :")
+    print()
+    print("진행사항 :")
+    for a in range(0, len(wf_list)) :
         analyze_db(wf_list[a])
 
     print()
