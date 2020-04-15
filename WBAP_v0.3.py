@@ -68,7 +68,7 @@ def analyze_db(lt) :
 
         # DB data allocates to each column.
         # execute 'urls' Table.
-        for row in cur.execute("select id, last_visit_time, url, title, visit_count from urls order by last_visit_time desc") :
+        for row in cur.execute("select id, last_visit_time, url, title, visit_count from urls order by last_visit_time asc") :
         
             # count = 연번
             count += 1
