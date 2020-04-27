@@ -1,4 +1,4 @@
-# Whale Browser Artifact Parser / Ver 0.2
+# Whale Browser Artifact Parser / Ver 0.3
 Created By Korkic
 
 
